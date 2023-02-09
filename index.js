@@ -1,4 +1,5 @@
 const express = require("express");
+const products = require("./data");
 
 const app = express();
 const PORT = 4000;
@@ -13,6 +14,9 @@ app.get("/", (req, res) => {
 
 app.get("/about", (req, res) => {
   res.send("This is my about route..... ");
+});
+app.get("products", (req, res) => {
+  res.send(products);
 });
 
 // Export the Express API
