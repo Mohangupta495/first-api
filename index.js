@@ -1,39 +1,37 @@
 const express = require("express");
-const products = require("./data");
+const dotenv = require("dotenv");
+const connectionDB = require("./srcc/database/mongoconnection.handler");
+const cors = require("cors");
+const visiterDetails = require("./srcc/models/visiter/controller/visiter.controller");
 
 const app = express();
-const PORT = 4000;
-
-app.listen(PORT, () => {
-  console.log(`API listening on PORT ${PORT} `);
-});
-
-app.get("/", (req, res) => {
-  res.send("welocme to webbrings");
-});
-
-app.get("/about", (req, res) => {
-  res.send("This is my about route..... ");
-});
-app.post("/sendmail", (req, res) => {
-  const data = new Model({
-    name: req.body.name,
-    email: req.body.email,
-    desc: req.body.desc,
-    phone: req.body.phone,
-  });
-
-  try {
-    const dataToSave = data.save();
-    res.status(200).json(dataToSave);
-  } catch (error) {
-    res.status(400).json({ message: error.message });
+const router = express.Router();
+if (process.env.NODE_ENV !== "production") {
+  require("dotenv").config();
+}
+app.use(cors());
+app.use((req, res, next) => {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Methods", "*");
+  res.setHeader("Access-Control-Allow-Headers", "*");
+  if (req.method === "OPTIONS") {
+    res.statusCode = 200;
+    res.end();
   }
-  // res.send("This is my about route..... ");
+  next();
 });
-app.get("/products", (req, res) => {
-  res.send(products);
+app.use(
+  express.urlencoded({
+    extended: false,
+  })
+);
+app.use(express.json());
+connectionDB();
+app.use("/", router.post("/visiter/signUp", visiterDetails));
+app.get("/", (req, res) => {
+  res.send("Welcome to WebBrings api section.");
 });
-
-// Export the Express API
-module.exports = app;
+const PORT = process.env.PORT || 3001;
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
+});
