@@ -96,3 +96,5 @@ const products = [
     image: "",
   },
 ];
+
+module.exports = products;
