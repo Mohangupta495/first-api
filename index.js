@@ -18,16 +18,6 @@ const VisiterModel = new Schema(
   { timestamps: true }
 );
 app.use(cors());
-app.use((req, res, next) => {
-  res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader("Access-Control-Allow-Methods", "*");
-  res.setHeader("Access-Control-Allow-Headers", "*");
-  if (req.method === "OPTIONS") {
-    res.statusCode = 200;
-    res.end();
-  }
-  next();
-});
 app.use(
   express.urlencoded({
     extended: false,
